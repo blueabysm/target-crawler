@@ -35,7 +35,7 @@ class TargetSpider(scrapy.Spider):
             if len(item['images']) > 0 and item['images'][0].get('alternate_urls'):
                 for i in range(len(item['images'][0]['alternate_urls'])):
                     row['alternate_url_{0}'.format(i)] = item['images'][0]['base_url'] + item['images'][0]['alternate_urls'][i]
-            yield item
+            yield row
 
         self.offset = self.offset + 1
         yield scrapy.Request(
