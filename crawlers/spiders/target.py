@@ -23,6 +23,18 @@ class TargetSpider(scrapy.Spider):
             return
 
         for item in data['search_response']['items']['Item']:
+            row = {
+                'URL': 'https://www.target.com' + item['url'],
+                'price_min': item['offer_price']['min_price'],
+                'price_max': item['offer_price']['max_price'],
+                'item_name': item['title'],
+                'description': item['bullet_description'],
+                'main_image_url': (item['images'][0]['base_url'] + item['images'][0]['primary']) if len(item['images']) > 0 else '',
+                'variation_attributes': item.get('variation_attributes') or {},
+            }
+            if len(item['images']) > 0 and item['images'][0].get('alternate_urls'):
+                for i in range(len(item['images'][0]['alternate_urls'])):
+                    row['alternate_url_{0}'.format(i)] = item['images'][0]['base_url'] + item['images'][0]['alternate_urls'][i]
             yield item
 
         self.offset = self.offset + 1
